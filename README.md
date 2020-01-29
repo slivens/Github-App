@@ -20,10 +20,11 @@ react-native redux-thunk redux react React Navigation4.x。
 
 ## 功能
 
-* 标签排序、删除;
-* 自定义标签;
-* 收藏喜欢的项目;
-* tab筛选;
+* 标签排序、删除
+* 自定义标签
+* 收藏喜欢的项目
+* tab筛选
+* 拖拽选项
 
 ## 待完善功能
 
