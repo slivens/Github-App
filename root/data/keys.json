@@ -1,0 +1,43 @@
+[
+  {
+    "path": "stars:>1",
+    "name": "ALL",
+    "short_name": "ALL",
+    "checked": true
+  },
+  {
+    "path": "Android",
+    "name": "Android",
+    "checked": true
+  },
+  {
+    "path": "iOS",
+    "name": "iOS",
+    "checked": true
+  },
+  {
+    "path": "react-native",
+    "name": "React Native",
+    "checked": true
+  },
+  {
+    "path": "MySQL",
+    "name": "MySQL",
+    "checked": true
+  },
+  {
+    "path": " AngularJS",
+    "name": " AngularJS",
+    "checked": true
+  },
+  {
+    "path": " jQuery",
+    "name": " jQuery",
+    "checked": true
+  },
+  {
+    "path": " react",
+    "name": " React",
+    "checked": false
+  }
+]

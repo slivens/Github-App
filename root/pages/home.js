@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2019-11-12 10:08:57
+ * @LastEditTime : 2020-01-29 17:19:09
+ * @LastEditors  : Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \reactNativeProject\myapp\root\pages\home.js
+ */
 import React, { Component } from 'react';
 import { View, Text, Button } from 'react-native';
 import { createBottomTabNavigator,BottomTabBar } from 'react-navigation-tabs';
@@ -8,6 +16,12 @@ import My from '../pages/my';
 import Popular from '../pages/popular';
 import Icon from 'react-native-vector-icons/Ionicons';
 import NavigationUtil from './dynamicTabNavigator';
+import {connect} from 'react-redux';
+import EventBus from 'react-native-event-bus';
+import EventTypres from '../util/EventTypes';
+import CustomeThemePage from './customeTheme';
+import { onShowCustomThemeView } from '../redux/actions/theme';
+import actions from '../redux/actions';
 const Tabs = {
     Home: {
         screen: Popular,
@@ -43,16 +57,13 @@ const Tabs = {
 class TabBarComp extends Component{
     constructor(props){
         super(props);
-        console.log('@@@@@@@props'+JSON.stringify(props,null,2))
         this.theme={
             tintColor:props.activeTintColor,
             updateTime:new Date().getTime(),
         }
     }
     render(){
-        console.log('@@@@@@@slw4444'+JSON.stringify(this.props.navigation.state,null,2))
         const {routes,index} = this.props.navigation.state;
-        console.log('#####'+JSON.stringify(this.props.navigation,null,2))
         if(routes[index].params){
             const {theme} = routes[index].params;
             //以最新的更新时间为主，防止被其他tab之前的修改覆盖掉
@@ -62,19 +73,58 @@ class TabBarComp extends Component{
         }
         return <BottomTabBar
         {...this.props}
-        activeTintColor={this.theme.tintColor}
+        activeTintColor={this.props.theme}
         />
     }
 }
-export default class HomePage extends Component {
+ class HomePage extends Component {
+    // rederCustomThemeView=()=>{
+    //     const {customThemeViewVisible,onShowCustomThemeView}=this.props;
+    //     return (
+    //         <CustomeThemePage
+    //             visible={customThemeViewVisible}
+    //             {...this.props}
+    //             onClose={()=>onShowCustomThemeView(false)}
+    //         />
+    //     )
+    // }
     render() {
         NavigationUtil.navigation=this.props.navigation;
-        const BottomTab = createAppContainer(createBottomTabNavigator(Tabs, {
-            tabBarComponent:TabBarComp
+            const {Home,Trend,Like,My}=Tabs;
+            const newTabs={Home,Trend,Like,My}
+            if(this.BottomTab){
+                return <this.BottomTab/>
+            }
+            this.BottomTab = createAppContainer(createBottomTabNavigator(newTabs, {
+            tabBarComponent:(props)=><TabBarComp
+            {...props} theme={this.props.theme}/>
         })
         )
 
-        return <BottomTab/>
+        return(
+            <View style={{flex:1}}>
+                <this.BottomTab
+                    onNavigationStateChange={(preState,newState,action)=>{
+                        EventBus.getInstance().fireEvent(EventTypres.bottom_tab_select,{
+                            from:preState.index,
+                            to:newState.index
+                        })
+                    }}
+                />
+            </View>    
+        )
 
     }
 }
+export default HomePage;
+// const mapStateToProps=(state,ownprops)=>{
+//     console.log('@@@@@@@@@state',state)
+//     return{
+//         nav:state.nav,
+//         customThemeViewVisible:state.ThemeReducer.customThemeViewVisible
+//     }
+// }
+// const mapDispatchToProps=dispatch=>({
+//     onShowCustomThemeView:(show)=>dispatch(actions.onShowCustomThemeView(show))
+// })
+// export default connect(mapStateToProps,mapDispatchToProps)(HomePage)
